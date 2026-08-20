@@ -5,6 +5,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "prod"]).default("development"),
   BASE_URL: z.string().default("http://localhost:8000"),
   GOOGLE_CLIENT_ID: z.string().optional(),
+  API_CLIENT_URL: z.string().describe("clinet url")
 });
 
 function createEnv(env: NodeJS.ProcessEnv) {
