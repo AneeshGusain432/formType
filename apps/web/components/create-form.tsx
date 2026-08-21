@@ -143,6 +143,8 @@ export function CreateForm({ form, fields: existingFields }: CreateFormProps) {
       description: values.description || undefined,
       fields,
     });
+    router.push("/dashboard");
+    return;
   };
 
   const handleAddField = () => {

@@ -15,7 +15,13 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Skeleton } from "~/components/ui/skeleton";
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "~/components/ui/empty";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "~/components/ui/empty";
 import { useGetFormById, useSubmitForm } from "~/hooks/api/form/form";
 
 export default function PublicFormPage({ params }: { params: Promise<{ id: string }> }) {
@@ -42,7 +48,8 @@ export default function PublicFormPage({ params }: { params: Promise<{ id: strin
       });
       setSubmittedSuccess(true);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to submit form. Please check required fields.";
+      const message =
+        err instanceof Error ? err.message : "Failed to submit form. Please check required fields.";
       setSubmitError(message);
     }
   };
@@ -87,7 +94,7 @@ export default function PublicFormPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md border-border bg-card text-card-foreground shadow-2xl shadow-black/30">
-          <CardContent className="pt-8 pb-8 space-y-4">
+          <CardContent className="flex flex-col items-center text-center pt-8 pb-8 space-y-4">
             <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-[#34483d] text-[#b6d5bd]">
               <IconCheck className="size-6" />
             </div>
@@ -119,7 +126,12 @@ export default function PublicFormPage({ params }: { params: Promise<{ id: strin
     <div className="flex min-h-screen items-center justify-center bg-background p-4 md:p-8">
       <Card className="w-full max-w-xl border-border bg-card text-card-foreground shadow-2xl shadow-black/30">
         <CardHeader className="border-b border-border bg-card">
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold tracking-tight text-[#f4f1ea]"><span className="flex size-7 items-center justify-center rounded-md bg-[#f4f1ea] text-[#101112]"><Layers3 className="size-3.5" /></span>FormType</div>
+          <div className="mb-2 flex items-center gap-2 text-sm font-semibold tracking-tight text-[#f4f1ea]">
+            <span className="flex size-7 items-center justify-center rounded-md bg-[#f4f1ea] text-[#101112]">
+              <Layers3 className="size-3.5" />
+            </span>
+            FormType
+          </div>
           <CardTitle className="text-2xl">{form.title}</CardTitle>
           {form.description && (
             <CardDescription className="text-base">{form.description}</CardDescription>
@@ -150,7 +162,10 @@ export default function PublicFormPage({ params }: { params: Promise<{ id: strin
                         value={value}
                         onValueChange={(val) => handleInputChange(field.labelKey, val)}
                       >
-                        <SelectTrigger id={`input-${field.id}`} className="w-full border-input bg-background text-foreground data-placeholder:text-muted-foreground hover:bg-accent hover:text-accent-foreground">
+                        <SelectTrigger
+                          id={`input-${field.id}`}
+                          className="w-full border-input bg-background text-foreground data-placeholder:text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                        >
                           <SelectValue placeholder={field.placeholder || "Select Yes or No"} />
                         </SelectTrigger>
                         <SelectContent className="border-border bg-popover text-popover-foreground">
@@ -182,7 +197,11 @@ export default function PublicFormPage({ params }: { params: Promise<{ id: strin
               })}
             </FieldGroup>
 
-            <Button type="submit" disabled={isPending} className="w-full bg-[#e8914a] text-[#101112] hover:bg-[#f0a566]">
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full bg-[#e8914a] text-[#101112] hover:bg-[#f0a566]"
+            >
               {isPending ? "Submitting..." : "Submit"}
             </Button>
           </form>
