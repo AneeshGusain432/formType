@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   ArrowRight,
@@ -10,10 +12,12 @@ import {
   Menu,
   MoveUpRight,
   Sparkles,
+  X,
   Zap,
 } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
+import { useState } from "react";
 
 const capabilities = [
   {
@@ -45,6 +49,7 @@ const capabilities = [
 const fieldTypes = ["Short answer", "Email", "Yes / No"];
 
 export default function Home() {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#101112] pt-20 text-[#f4f1ea]">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-[#2e302d]/80 bg-[#101112]/90 backdrop-blur-md">
@@ -58,16 +63,17 @@ export default function Home() {
             </span>
             FormType
           </Link>
+
           <div className="hidden items-center gap-8 text-sm font-medium text-[#aaa59b] lg:flex">
-            <a href="#product" className="flex items-center gap-1 hover:text-[#f4f1ea]">
+            <Link href="#product" className="flex items-center gap-1 hover:text-[#f4f1ea]">
               Product <ChevronDown className="size-3.5" />
-            </a>
-            <a href="#use-cases" className="flex items-center gap-1 hover:text-[#f4f1ea]">
+            </Link>
+            <Link href="#use-cases" className="flex items-center gap-1 hover:text-[#f4f1ea]">
               Use cases <ChevronDown className="size-3.5" />
-            </a>
-            <a href="#principles" className="hover:text-[#f4f1ea]">
+            </Link>
+            <Link href="#principles" className="hover:text-[#f4f1ea]">
               Resources
-            </a>
+            </Link>
             <Link href="/login" className="hover:text-[#f4f1ea]">
               Log in
             </Link>
@@ -81,10 +87,62 @@ export default function Home() {
               </Link>
             </Button>
           </div>
-          <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open navigation">
-            <Menu />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={mobileNavOpen}
+            onClick={() => setMobileNavOpen((open) => !open)}
+          >
+            {mobileNavOpen ? <X /> : <Menu />}
           </Button>
         </nav>
+
+        {mobileNavOpen && (
+          <div className="border-t border-[#2e302d]/80 bg-[#101112] px-6 py-6 lg:hidden">
+            <div className="flex flex-col gap-5 text-sm font-medium text-[#aaa59b]">
+              <Link
+                href="#product"
+                onClick={() => setMobileNavOpen(false)}
+                className="hover:text-[#f4f1ea]"
+              >
+                Product
+              </Link>
+              <Link
+                href="#use-cases"
+                onClick={() => setMobileNavOpen(false)}
+                className="hover:text-[#f4f1ea]"
+              >
+                Use cases
+              </Link>
+              <Link
+                href="#principles"
+                onClick={() => setMobileNavOpen(false)}
+                className="hover:text-[#f4f1ea]"
+              >
+                Resources
+              </Link>
+              <Link
+                href="/login"
+                onClick={() => setMobileNavOpen(false)}
+                className="hover:text-[#f4f1ea]"
+              >
+                Log in
+              </Link>
+              <Button
+                asChild
+                size="sm"
+                className="w-fit rounded-full bg-[#f4f1ea] px-5 text-[#101112] hover:bg-white"
+              >
+                <Link href="/signup" onClick={() => setMobileNavOpen(false)}>
+                  Sign up free <ArrowUpRight />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        )}
       </header>
 
       <section className="relative border-b border-[#2e302d] bg-[#181a19]">
