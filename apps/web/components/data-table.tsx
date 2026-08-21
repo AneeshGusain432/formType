@@ -75,7 +75,13 @@ import {
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
 } from "~/components/ui/dropdown-menu";
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "~/components/ui/empty";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "~/components/ui/empty";
 import { Label } from "~/components/ui/label";
 import {
   Select,
@@ -224,7 +230,16 @@ function FormSubmissionsViewer({ item }: { item: FormRow }) {
                     Submission #{idx + 1}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {formatDate(submission.createdAt ? String(submission.createdAt) : null)}
+                    {/* {formatDate(submission.createdAt ? String(submission.createdAt) : null)} */}
+                    {submission?.createdAt
+                      ? new Date(submission.createdAt!).toLocaleString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "2-digit",
+                        })
+                      : null}
                   </span>
                 </div>
                 <div className="space-y-2">
@@ -233,7 +248,10 @@ function FormSubmissionsViewer({ item }: { item: FormRow }) {
                       const field = item.fields.find((f) => f.labelKey === key || f.id === key);
                       const label = field?.label || key;
                       return (
-                        <div key={key} className="flex flex-col sm:flex-row sm:justify-between text-xs gap-1">
+                        <div
+                          key={key}
+                          className="flex flex-col sm:flex-row sm:justify-between text-xs gap-1"
+                        >
                           <span className="font-medium text-foreground">{label}:</span>
                           <span className="text-muted-foreground">{val || "—"}</span>
                         </div>
@@ -283,7 +301,11 @@ function ActionsCell({ row }: { row: Row<typeof features, FormRow> }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem onClick={handleCopyLink}>
-            {copied ? <IconCheck className="mr-2 size-4 text-green-500" /> : <IconCopy className="mr-2 size-4" />}
+            {copied ? (
+              <IconCheck className="mr-2 size-4 text-green-500" />
+            ) : (
+              <IconCopy className="mr-2 size-4" />
+            )}
             {copied ? "Copied Link!" : "Copy Share Link"}
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
@@ -485,16 +507,16 @@ export function DataTable() {
     return (
       <div className="px-6">
         <Empty className="border">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <IconClipboardText />
-          </EmptyMedia>
-          <EmptyTitle>Something went wrong</EmptyTitle>
-          <EmptyDescription>
-            {error?.message || "Failed to load your forms. Please try again."}
-          </EmptyDescription>
-        </EmptyHeader>
-      </Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <IconClipboardText />
+            </EmptyMedia>
+            <EmptyTitle>Something went wrong</EmptyTitle>
+            <EmptyDescription>
+              {error?.message || "Failed to load your forms. Please try again."}
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       </div>
     );
   }
@@ -506,10 +528,8 @@ export function DataTable() {
           <EmptyMedia variant="icon">
             <IconClipboardText />
           </EmptyMedia>
-          <EmptyTitle >No forms yet</EmptyTitle>
-          <EmptyDescription>
-            Create your first form to start collecting data.
-          </EmptyDescription>
+          <EmptyTitle>No forms yet</EmptyTitle>
+          <EmptyDescription>Create your first form to start collecting data.</EmptyDescription>
         </EmptyHeader>
         <Button asChild>
           <Link href="/dashboard/forms">Create Form</Link>
@@ -586,7 +606,8 @@ export function DataTable() {
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
-            {table.getFilteredRowModel().rows.length} form{table.getFilteredRowModel().rows.length === 1 ? "" : "s"}
+            {table.getFilteredRowModel().rows.length} form
+            {table.getFilteredRowModel().rows.length === 1 ? "" : "s"}
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
