@@ -12,7 +12,10 @@ declare global {
     google?: {
       accounts: {
         id: {
-          initialize: (options: { client_id: string; callback: (response: { credential: string }) => void }) => void;
+          initialize: (options: {
+            client_id: string;
+            callback: (response: { credential: string }) => void;
+          }) => void;
           renderButton: (element: HTMLElement, options: Record<string, string>) => void;
         };
       };
@@ -79,7 +82,6 @@ export function GoogleSigninButton({ label = "Continue with Google" }: GoogleSig
       document.head.appendChild(script);
     }
 
-    
     const observer = new ResizeObserver((entries) => {
       const width = Math.round(entries[0]?.contentRect.width ?? getWidth());
       setButtonWidth(width);
@@ -97,12 +99,38 @@ export function GoogleSigninButton({ label = "Continue with Google" }: GoogleSig
   return (
     <div ref={containerRef} className="w-full max-w-[360px] mx-auto space-y-2 overflow-hidden">
       <div
-        ref={buttonRef}
-        className="flex min-h-10 w-full justify-center [&>div]:!w-full [&_iframe]:!w-full"
-        aria-label={label}
+        className="relative min-h-10 w-full overflow-hidden rounded-md"
         style={{ width: buttonWidth }}
-      />
-      {isPending && <Spinner className="mx-auto text-primary" />}
+      >
+        {/* Skeleton shown until the GSI script has rendered the real button */}
+        {!isReady && (
+          <div
+            className="absolute inset-0 flex items-center justify-center gap-2 bg-muted/50 animate-pulse"
+            aria-hidden="true"
+          >
+            <Spinner className="size-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">Loading Google sign-in…</span>
+          </div>
+        )}
+
+        <div
+          ref={buttonRef}
+          className="flex min-h-10 w-full justify-center [&>div]:!w-full [&_iframe]:!w-full"
+          aria-label={label}
+          style={{ visibility: isReady ? "visible" : "hidden" }}
+        />
+
+        {/* Overlay + spinner while a sign-in request is in flight */}
+        {isPending && (
+          <div
+            className="absolute inset-0 flex items-center justify-center bg-[#191b1b]"
+            aria-hidden="true"
+          >
+            <Spinner className="size-5 text-primary" />
+          </div>
+        )}
+      </div>
+
       {isReady && error && <p className="text-center text-sm text-destructive">{error.message}</p>}
     </div>
   );
