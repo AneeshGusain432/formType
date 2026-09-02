@@ -45,20 +45,24 @@ export function GoogleSigninButton({
     useGoogleSignin();
 
   const [isReady, setIsReady] = useState(false);
-  const [buttonWidth, setButtonWidth] = useState(MAX_BUTTON_WIDTH);
+  const [buttonWidth, setButtonWidth] =
+    useState(MAX_BUTTON_WIDTH);
 
-  // Prevent multiple Google initializations
+
   const initializedRef = useRef(false);
 
-  // Prevent repeated renderButton calls
-  const lastRenderedWidthRef = useRef<number | null>(null);
 
-  // Keep latest callback without reinitializing Google
-  const signinWithGoogleRef = useRef(signinWithGoogleAsync);
+  const lastRenderedWidthRef =
+    useRef<number | null>(null);
+
+
+  const signinWithGoogleRef =
+    useRef(signinWithGoogleAsync);
 
   useEffect(() => {
     signinWithGoogleRef.current = signinWithGoogleAsync;
   }, [signinWithGoogleAsync]);
+
 
   const routerRef = useRef(router);
 
@@ -67,27 +71,39 @@ export function GoogleSigninButton({
   }, [router]);
 
   useEffect(() => {
-    const clientId = env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const clientId =
+      env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
     if (!clientId) {
       return;
     }
 
-    if (!containerRef.current || !buttonRef.current) {
+    if (
+      !containerRef.current ||
+      !buttonRef.current
+    ) {
       return;
     }
 
-    let resizeObserver: ResizeObserver | undefined;
+    let resizeObserver: ResizeObserver | null = null;
+    let createdScript: HTMLScriptElement | null = null;
+    let existingScript: HTMLScriptElement | null =
+      null;
 
     const getButtonWidth = () => {
-      const width =
-        containerRef.current?.clientWidth ?? MAX_BUTTON_WIDTH;
+      const containerWidth =
+        containerRef.current?.clientWidth ??
+        MAX_BUTTON_WIDTH;
 
       return Math.max(
         MIN_BUTTON_WIDTH,
-        Math.min(MAX_BUTTON_WIDTH, Math.round(width))
+        Math.min(
+          MAX_BUTTON_WIDTH,
+          Math.round(containerWidth)
+        )
       );
     };
+
 
     const renderGoogleButton = (width: number) => {
       if (
@@ -98,13 +114,14 @@ export function GoogleSigninButton({
         return;
       }
 
-      // ⭐ VERY IMPORTANT
-      // Don't render again if width hasn't actually changed.
-      if (lastRenderedWidthRef.current === width) {
+      if (
+        lastRenderedWidthRef.current === width
+      ) {
         return;
       }
 
       lastRenderedWidthRef.current = width;
+
 
       buttonRef.current.replaceChildren();
 
@@ -115,7 +132,9 @@ export function GoogleSigninButton({
           size: "large",
           width: String(width),
           text: "continue_with",
-          logo_alignment: "center",
+
+
+          logo_alignment: "left",
         }
       );
 
@@ -123,23 +142,28 @@ export function GoogleSigninButton({
     };
 
     const initializeGoogle = () => {
-      if (!window.google || !buttonRef.current) {
+      if (
+        !window.google ||
+        !buttonRef.current
+      ) {
         return;
       }
 
-      // ⭐ Initialize ONLY ONCE
       if (!initializedRef.current) {
         initializedRef.current = true;
 
         window.google.accounts.id.initialize({
           client_id: clientId,
+
           callback: async ({ credential }) => {
             try {
               await signinWithGoogleRef.current({
                 credential,
               });
 
-              routerRef.current.replace("/dashboard");
+              routerRef.current.replace(
+                "/dashboard"
+              );
             } catch (error) {
               console.error(
                 "Google sign-in failed:",
@@ -157,62 +181,58 @@ export function GoogleSigninButton({
       renderGoogleButton(width);
     };
 
-    /*
-     * Google script
-     */
-    const existingScript = document.querySelector(
+    existingScript = document.querySelector(
       'script[src="https://accounts.google.com/gsi/client"]'
     );
 
     if (window.google) {
       initializeGoogle();
-    } else if (existingScript) {
+    }
+
+    else if (existingScript) {
       existingScript.addEventListener(
         "load",
         initializeGoogle
       );
-    } else {
-      const script = document.createElement("script");
-
-      script.src =
-        "https://accounts.google.com/gsi/client";
-
-      script.async = true;
-      script.defer = true;
-
-      script.onload = initializeGoogle;
-
-      document.head.appendChild(script);
     }
 
-    /*
-     * Resize observer
-     *
-     * IMPORTANT:
-     * We only update the width here.
-     * We DO NOT call renderButton() directly
-     * on every ResizeObserver callback.
-     */
-    resizeObserver = new ResizeObserver((entries) => {
-      const width = Math.max(
-        MIN_BUTTON_WIDTH,
-        Math.min(
-          MAX_BUTTON_WIDTH,
-          Math.round(
-            entries[0]?.contentRect?.width ??
-              MAX_BUTTON_WIDTH
+    else {
+      createdScript =
+        document.createElement("script");
+
+      createdScript.src =
+        "https://accounts.google.com/gsi/client";
+
+      createdScript.async = true;
+      createdScript.defer = true;
+      createdScript.onload = initializeGoogle;
+
+      document.head.appendChild(createdScript);
+    }
+
+
+    resizeObserver = new ResizeObserver(
+      (entries) => {
+        const width = Math.max(
+          MIN_BUTTON_WIDTH,
+          Math.min(
+            MAX_BUTTON_WIDTH,
+            Math.round(
+              entries[0]?.contentRect?.width ??
+                MAX_BUTTON_WIDTH
+            )
           )
-        )
-      );
+        );
 
-      setButtonWidth((previousWidth) => {
-        if (previousWidth === width) {
-          return previousWidth;
-        }
+        setButtonWidth((previousWidth) => {
+          if (previousWidth === width) {
+            return previousWidth;
+          }
 
-        return width;
-      });
-    });
+          return width;
+        });
+      }
+    );
 
     resizeObserver.observe(containerRef.current);
 
@@ -225,12 +245,14 @@ export function GoogleSigninButton({
           initializeGoogle
         );
       }
+
+      if (createdScript) {
+        createdScript.onload = null;
+      }
     };
   }, []);
 
-  /*
-   * Render button when width actually changes.
-   */
+
   useEffect(() => {
     if (
       !window.google ||
@@ -240,11 +262,15 @@ export function GoogleSigninButton({
       return;
     }
 
-    if (lastRenderedWidthRef.current === buttonWidth) {
+    if (
+      lastRenderedWidthRef.current ===
+      buttonWidth
+    ) {
       return;
     }
 
-    lastRenderedWidthRef.current = buttonWidth;
+    lastRenderedWidthRef.current =
+      buttonWidth;
 
     buttonRef.current.replaceChildren();
 
@@ -255,12 +281,14 @@ export function GoogleSigninButton({
         size: "large",
         width: String(buttonWidth),
         text: "continue_with",
-        logo_alignment: "center",
+
+        logo_alignment: "left",
       }
     );
 
     setIsReady(true);
   }, [buttonWidth]);
+
 
   if (!env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
     return (
@@ -275,15 +303,11 @@ export function GoogleSigninButton({
       ref={containerRef}
       className="mx-auto w-full max-w-[360px] space-y-2 overflow-hidden"
     >
-      <div
-        className="relative min-h-10 w-full overflow-hidden rounded-md"
-        style={{
-          width: buttonWidth,
-        }}
-      >
+      <div className="relative min-h-10 w-full overflow-hidden rounded-md">
+        {/* Loading skeleton */}
         {!isReady && (
           <div
-            className="absolute inset-0 flex items-center justify-center gap-2 bg-muted/50 animate-pulse"
+            className="absolute inset-0 z-10 flex items-center justify-center gap-2 bg-muted/50 animate-pulse"
             aria-hidden="true"
           >
             <Spinner className="size-4 text-muted-foreground" />
@@ -294,18 +318,21 @@ export function GoogleSigninButton({
           </div>
         )}
 
+      
         <div
           ref={buttonRef}
-          className="flex min-h-10 w-full justify-center [&>div]:!w-full [&_iframe]:!w-full"
+          className="min-h-10 w-full"
           aria-label={label}
           style={{
-            visibility: isReady ? "visible" : "hidden",
+            visibility: isReady
+              ? "visible"
+              : "hidden",
           }}
         />
 
         {isPending && (
           <div
-            className="absolute inset-0 flex items-center justify-center bg-[#191b1b]"
+            className="absolute inset-0 z-20 flex items-center justify-center bg-[#191b1b]"
             aria-hidden="true"
           >
             <Spinner className="size-5 text-primary" />
