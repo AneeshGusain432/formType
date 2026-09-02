@@ -12,10 +12,10 @@ RUN pnpm --filter @repo/api build
 FROM base AS web-builder
 ARG NEXT_PUBLIC_API_URL=http://localhost:8000
 ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID=""
-ARG API_SERVER_URL=http://api:8000
+ARG NEXT_PUBLIC_API_URL=http://api:8000
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-ENV API_SERVER_URL=${API_SERVER_URL}
+ENV NEXT_PUBLIC_API_URL=${API_SERVER_URL}
 RUN pnpm --filter web build
 
 FROM node:20-alpine AS api
@@ -46,7 +46,7 @@ COPY --from=web-builder /workspace/apps/web/public /workspace/apps/web/public
 
 ENV PORT=3000 \
     NODE_ENV=production \
-    API_SERVER_URL=http://api:8000 \
+    NEXT_PUBLIC_API_URL=http://api:8000 \
     NEXT_PUBLIC_API_URL=http://localhost:8000 \
     NEXT_PUBLIC_GOOGLE_CLIENT_ID=""
 

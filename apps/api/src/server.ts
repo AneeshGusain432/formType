@@ -15,13 +15,13 @@ export const app = express();
 const openApiDocument = generateOpenApiDocument(serverRouter, {
   title: "FormType OpenAPI",
   version: "1.0.0",
-  baseUrl: env.BASE_URL.concat("/api"),
+  baseUrl: env.NEXT_PUBLIC_API_URL.concat("/api"),
 });
 
 if (env.NODE_ENV === "prod") {
   app.use(
     cors({
-      origin: [env.API_CLIENT_URL || "http://localhost:3000"],
+      origin: [env.NEXT_PUBLIC_API_CLIENT_URL || "http://localhost:3000"],
       credentials: true
     })
   );
@@ -39,12 +39,12 @@ app.get("/health", (req, res) => {
   return res.json({ message: "FormType server is healthy", healthy: true });
 });
 
-logger.debug(`openapi.json: ${env.BASE_URL}/openapi.json`);
+logger.debug(`openapi.json: ${env.NEXT_PUBLIC_API_URL}/openapi.json`);
 app.get("/openapi.json", (req, res) => {
   return res.json(openApiDocument);
 });
 
-logger.debug(`docs: ${env.BASE_URL}/docs`);
+logger.debug(`docs: ${env.NEXT_PUBLIC_API_URL}/docs`);
 app.use("/docs", apiReference({ url: "/openapi.json" }));
 
 app.use(

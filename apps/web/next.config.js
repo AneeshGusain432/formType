@@ -1,4 +1,4 @@
-const apiServerUrl = process.env.API_SERVER_URL ?? "http://api:8000";
+const apiServerUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://api:8000";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
