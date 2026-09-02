@@ -41,6 +41,7 @@ export const useSignin = () => {
     onSuccess: (data) => {
       utils.auth.getLoggedInUserInfo.setData(undefined, { user: data.user });
       utils.form.getDashboardStats.invalidate()
+      utils.form.getUserForms.invalidate()
     },
   });
 
@@ -62,6 +63,7 @@ export const useGoogleSignin = () => {
     onSuccess: (data) => {
       utils.auth.getLoggedInUserInfo.setData(undefined, { user: data.user });
       utils.form.getDashboardStats.invalidate()
+       utils.form.getUserForms.invalidate()
     },
   });
 
@@ -103,6 +105,7 @@ export const useLogout = () => {
     onSuccess: async () => {
       await utils.auth.getLoggedInUserInfo.reset();
       utils.form.getDashboardStats.invalidate()
+       utils.form.getUserForms.invalidate()
     },
   });
 
