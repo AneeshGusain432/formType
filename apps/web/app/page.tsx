@@ -139,7 +139,7 @@ export default function Home() {
                 type="button"
                 onClick={() => {
                   setMobileNavOpen(false);
-                  router.push("/login");
+                  handlePrimaryAction();
                 }}
                 className="flex items-center text-left text-sm font-medium text-[#aaa59b] transition-colors hover:text-[#f4f1ea]"
               >
