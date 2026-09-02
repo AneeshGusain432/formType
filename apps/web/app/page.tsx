@@ -345,12 +345,12 @@ export default function Home() {
             FormType
           </Link>
           <span>Make the questions count. © 2026</span>
-          <Link
-            href="/login"
+          <button
+            onClick={handlePrimaryAction}
             className="flex items-center gap-1 text-[#f4f1ea] hover:text-[#e8914a]"
           >
             Log in <ArrowUpRight className="size-3.5" />
-          </Link>
+          </button>
         </div>
       </footer>
     </main>
