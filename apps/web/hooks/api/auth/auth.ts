@@ -10,9 +10,7 @@ export const useSignup = () => {
     isIdle,
     isSuccess,
     isPending,
-  } = trpc.auth.signupUserWithEmailAndPassword.useMutation({ onSuccess: async () => {
-    
-  }});
+  } = trpc.auth.signupUserWithEmailAndPassword.useMutation({ onSuccess: async () => {} });
 
   return {
     signupUserWithEmailAndPasswordAsync,
@@ -40,8 +38,8 @@ export const useSignin = () => {
   } = trpc.auth.signinUserWithEmailAndPassword.useMutation({
     onSuccess: (data) => {
       utils.auth.getLoggedInUserInfo.setData(undefined, { user: data.user });
-      utils.form.getDashboardStats.invalidate()
-      utils.form.getUserForms.invalidate()
+      utils.form.getDashboardStats.invalidate();
+      utils.form.getUserForms.invalidate();
     },
   });
 
@@ -62,8 +60,8 @@ export const useGoogleSignin = () => {
   const mutation = trpc.auth.signinWithGoogle.useMutation({
     onSuccess: (data) => {
       utils.auth.getLoggedInUserInfo.setData(undefined, { user: data.user });
-      utils.form.getDashboardStats.invalidate()
-       utils.form.getUserForms.invalidate()
+      utils.form.getDashboardStats.invalidate();
+      utils.form.getUserForms.invalidate();
     },
   });
 
@@ -104,8 +102,8 @@ export const useLogout = () => {
   } = trpc.auth.logout.useMutation({
     onSuccess: async () => {
       await utils.auth.getLoggedInUserInfo.reset();
-      utils.form.getDashboardStats.invalidate()
-       utils.form.getUserForms.invalidate()
+      utils.form.getDashboardStats.invalidate();
+      utils.form.getUserForms.invalidate();
     },
   });
 
