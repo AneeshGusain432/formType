@@ -1,0 +1,14 @@
+node_modules
+.git
+.gitignore
+.next
+apps/*/dist
+apps/*/.next
+packages/*/dist
+Dockerfile
+.dockerignore
+npm-debug.log*
+pnpm-debug.log*
+.env
+.env.*
+coverage

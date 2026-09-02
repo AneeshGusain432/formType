@@ -425,18 +425,75 @@ function DraggableRow({ row }: { row: Row<typeof features, FormRow> }) {
 
 function DataTableSkeleton() {
   return (
-    <div className="overflow-hidden rounded-lg border">
-      <Table>
-        <TableBody>
-          {[...Array(3)].map((_, i) => (
-            <TableRow key={i}>
-              <TableCell colSpan={6}>
-                <Skeleton className="h-6 w-full" />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="w-full flex-col justify-start gap-6">
+      <div className="flex items-center justify-end gap-2 px-4 lg:px-6">
+        <Skeleton className="h-8 w-36" />
+        <Skeleton className="h-8 w-28" />
+      </div>
+      <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6 mt-5">
+        <div className="overflow-hidden rounded-lg border">
+          <Table>
+            <TableHeader className="sticky top-0 z-10 bg-muted">
+              <TableRow>
+                <TableHead className="w-8">
+                  <span className="sr-only">Drag</span>
+                </TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Fields</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead>Updated</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="**:data-[slot=table-cell]:first:w-8">
+              {[...Array(5)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell className="w-8">
+                    <Skeleton className="size-4 rounded" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-36 sm:w-56" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                      <Skeleton className="h-4 w-14" />
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center justify-end gap-2">
+                      <Skeleton className="h-8 w-24 rounded" />
+                      <Skeleton className="size-8 rounded" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex items-center justify-between px-4">
+          <Skeleton className="hidden h-4 w-20 lg:block" />
+          <div className="flex w-full items-center justify-between gap-8 lg:w-fit lg:justify-end">
+            <div className="hidden items-center gap-2 lg:flex">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-8 w-16" />
+            </div>
+            <Skeleton className="h-4 w-24" />
+            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+              <Skeleton className="hidden size-8 lg:block" />
+              <Skeleton className="size-8" />
+              <Skeleton className="size-8" />
+              <Skeleton className="hidden size-8 lg:block" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -505,7 +562,7 @@ export function DataTable() {
 
   if (isError) {
     return (
-      <div className="px-6">
+      <div className="px-4 lg:px-6">
         <Empty className="border">
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -523,18 +580,32 @@ export function DataTable() {
 
   if (tableData.length === 0) {
     return (
-      <Empty className="m-5 border">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <IconClipboardText />
-          </EmptyMedia>
-          <EmptyTitle>No forms yet</EmptyTitle>
-          <EmptyDescription>Create your first form to start collecting data.</EmptyDescription>
-        </EmptyHeader>
-        <Button asChild>
-          <Link href="/dashboard/forms">Create Form</Link>
-        </Button>
-      </Empty>
+      <div className="w-full flex-col justify-start gap-6">
+        <div className="flex items-center justify-end gap-2 px-4 lg:px-6">
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/dashboard/forms">
+              <IconPlus />
+              <span className="hidden lg:inline">Create Form</span>
+            </Link>
+          </Button>
+        </div>
+        <div className="px-4 lg:px-6 mt-5">
+          <Empty className="border">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <IconClipboardText />
+              </EmptyMedia>
+              <EmptyTitle>No forms yet</EmptyTitle>
+              <EmptyDescription>
+                Create your first form to start collecting data.
+              </EmptyDescription>
+            </EmptyHeader>
+            <Button asChild>
+              <Link href="/dashboard/forms">Create Form</Link>
+            </Button>
+          </Empty>
+        </div>
+      </div>
     );
   }
 

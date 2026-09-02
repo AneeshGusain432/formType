@@ -14,6 +14,7 @@ export const useCreateForm = () => {
   } = trpc.form.createForm.useMutation({
     onSuccess: async () => {
       await utils.form.getUserForms.invalidate();
+      await utils.form.getDashboardStats.invalidate();
     },
   });
 
@@ -44,6 +45,7 @@ export const useUpdateForm = () => {
     onSuccess: async (_, variables) => {
       await utils.form.getUserForms.invalidate();
       await utils.form.getFormById.invalidate({ formId: variables.formId });
+      await utils.form.getDashboardStats.invalidate();
     },
   });
 
@@ -73,6 +75,7 @@ export const useDeleteForm = () => {
   } = trpc.form.deleteForm.useMutation({
     onSuccess: async () => {
       await utils.form.getUserForms.invalidate();
+      await utils.form.getDashboardStats.invalidate();
     },
   });
 
