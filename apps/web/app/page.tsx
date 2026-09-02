@@ -136,10 +136,12 @@ export default function Home() {
                 Resources
               </Link>
               <button
+                type="button"
                 onClick={() => {
-                  (setMobileNavOpen(false), handlePrimaryAction());
+                  setMobileNavOpen(false);
+                  router.push("/login");
                 }}
-                className="hover:text-[#f4f1ea]"
+                className="flex items-center text-left text-sm font-medium text-[#aaa59b] transition-colors hover:text-[#f4f1ea]"
               >
                 Log in
               </button>
@@ -228,9 +230,12 @@ export default function Home() {
                 </div>
                 <div className="mt-7 flex items-center justify-between">
                   <span className="text-xs text-[#817f76]">3 questions</span>
-                  <span className="rounded-lg bg-[#e59b61] px-4 py-2.5 text-xs font-semibold text-[#20201e]">
+                  <button
+                    onClick={handlePrimaryAction}
+                    className="rounded-lg bg-[#e59b61] px-4 py-2.5 text-xs font-semibold text-[#20201e]"
+                  >
                     Continue <ArrowRight className="ml-1 inline size-3.5" />
-                  </span>
+                  </button>
                 </div>
               </div>
             </div>
