@@ -100,6 +100,7 @@ export const useLogout = () => {
   } = trpc.auth.logout.useMutation({
     onSuccess: async () => {
       await utils.auth.getLoggedInUserInfo.reset();
+      await utils.form.getUserForms.invalidate()
     },
   });
 
