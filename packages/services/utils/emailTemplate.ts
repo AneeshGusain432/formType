@@ -75,7 +75,7 @@ export const welcomeEmailTemplate = `<!DOCTYPE html>
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top: 30px;">
                 <tr>
                   <td class="cta-button" style="border-radius:999px; background-color:#e8914a;">
-                    <a href="https://formtype.app/dashboard" target="_blank" style="display:inline-block; padding:14px 30px; font-family: Arial, Helvetica, sans-serif; font-size:15px; font-weight:700; color:#101112; text-decoration:none; border-radius:999px;">
+                    <a href="https://form-type-web.vercel.app" target="_blank" style="display:inline-block; padding:14px 30px; font-family: Arial, Helvetica, sans-serif; font-size:15px; font-weight:700; color:#101112; text-decoration:none; border-radius:999px;">
                       Start building &nbsp;&rarr;
                     </a>
                   </td>
