@@ -177,6 +177,7 @@ export default function Home() {
                 className="h-12 rounded-full bg-[#e8914a] px-7 text-[#101112] hover:bg-[#f0a566]"
               >
                 <button
+                type="button"
                  onClick={handlePrimaryAction}
                 >
                   Start building free <ArrowRight />
@@ -331,6 +332,7 @@ export default function Home() {
           className="mt-9 h-12 rounded-full bg-[#f4f1ea] px-7 text-[#101112] hover:bg-white"
         >
           <button
+          type="button"
            onClick={handlePrimaryAction}
           >
             Create a form for free <ArrowUpRight />
