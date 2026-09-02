@@ -17,10 +17,9 @@ import {
 } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGetUserInfo } from "~/hooks/api/auth/auth";
-import { Spinner } from "~/components/ui/spinner";
 
 const capabilities = [
   {
@@ -58,9 +57,9 @@ export default function Home() {
   const { user, isLoading } = useGetUserInfo();
 
   const handlePrimaryAction = () => {
-  if (isLoading) return;
-  router.push(user ? "/dashboard" : "/signup");
-};
+    if (isLoading) return;
+    router.push(user ? "/dashboard" : "/login");
+  };
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#101112] pt-20 text-[#f4f1ea]">
@@ -86,9 +85,9 @@ export default function Home() {
             <Link href="#principles" className="hover:text-[#f4f1ea]">
               Resources
             </Link>
-            <Link href="/login" className="hover:text-[#f4f1ea]">
+            <button type="button" onClick={handlePrimaryAction} className="hover:text-[#f4f1ea]">
               Log in
-            </Link>
+            </button>
             <Button
               asChild
               size="sm"
@@ -136,13 +135,14 @@ export default function Home() {
               >
                 Resources
               </Link>
-              <Link
-                href="/login"
-                onClick={() => setMobileNavOpen(false)}
+              <button
+                onClick={() => {
+                  (setMobileNavOpen(false), handlePrimaryAction);
+                }}
                 className="hover:text-[#f4f1ea]"
               >
                 Log in
-              </Link>
+              </button>
               <Button
                 asChild
                 size="sm"
@@ -176,10 +176,7 @@ export default function Home() {
                 size="lg"
                 className="h-12 rounded-full bg-[#e8914a] px-7 text-[#101112] hover:bg-[#f0a566]"
               >
-                <button
-                type="button"
-                 onClick={handlePrimaryAction}
-                >
+                <button type="button" onClick={handlePrimaryAction}>
                   Start building free <ArrowRight />
                 </button>
               </Button>
@@ -331,10 +328,7 @@ export default function Home() {
           size="lg"
           className="mt-9 h-12 rounded-full bg-[#f4f1ea] px-7 text-[#101112] hover:bg-white"
         >
-          <button
-          type="button"
-           onClick={handlePrimaryAction}
-          >
+          <button type="button" onClick={handlePrimaryAction}>
             Create a form for free <ArrowUpRight />
           </button>
         </Button>
