@@ -61,7 +61,6 @@ export const useGoogleSignin = () => {
   const mutation = trpc.auth.signinWithGoogle.useMutation({
     onSuccess: (data) => {
       utils.auth.getLoggedInUserInfo.setData(undefined, { user: data.user });
-      utils.form.getUserForms.invalidate()
     },
   });
 
@@ -102,6 +101,7 @@ export const useLogout = () => {
   } = trpc.auth.logout.useMutation({
     onSuccess: async () => {
       await utils.auth.getLoggedInUserInfo.reset();
+      utils.form.getDashboardStats.invalidate()
     },
   });
 
