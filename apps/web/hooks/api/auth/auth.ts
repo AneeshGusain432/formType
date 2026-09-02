@@ -40,6 +40,7 @@ export const useSignin = () => {
   } = trpc.auth.signinUserWithEmailAndPassword.useMutation({
     onSuccess: (data) => {
       utils.auth.getLoggedInUserInfo.setData(undefined, { user: data.user });
+      utils.form.getUserForms.invalidate()
     },
   });
 
@@ -60,6 +61,7 @@ export const useGoogleSignin = () => {
   const mutation = trpc.auth.signinWithGoogle.useMutation({
     onSuccess: (data) => {
       utils.auth.getLoggedInUserInfo.setData(undefined, { user: data.user });
+      utils.form.getUserForms.invalidate()
     },
   });
 
@@ -100,7 +102,6 @@ export const useLogout = () => {
   } = trpc.auth.logout.useMutation({
     onSuccess: async () => {
       await utils.auth.getLoggedInUserInfo.reset();
-      await utils.form.getUserForms.invalidate()
     },
   });
 
