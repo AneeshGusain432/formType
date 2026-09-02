@@ -6,7 +6,7 @@ const envSchema = z.object({
   JWT_ACCESS_TOKEN_EXPIRY: z.string().describe("expiry for access tokens"),
   JWT_REFRESH_TOKEN_SECRET: z.string().describe("secret key for refresh tokens"),
   JWT_REFRESH_TOKEN_EXPIRY: z.string().describe("expiry for refresh tokens"),
-  GOOGLE_CLIENT_ID: z.string().optional(),
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: z.string().optional(),
 });
 
 function createEnv(env: NodeJS.ProcessEnv) {

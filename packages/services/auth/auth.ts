@@ -104,14 +104,14 @@ export async function signinWithEmailAndPassword(
 export async function signinWithGoogle(payload: authModel.signinWithGoogleInputType) {
   const { credential } = await authModel.signinWithGoogleInputModel.parseAsync(payload);
 
-  if (!env.GOOGLE_CLIENT_ID) {
+  if (!env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
     throw new Error("Google OAuth is not configured");
   }
 
-  const client = new OAuth2Client(env.GOOGLE_CLIENT_ID);
+  const client = new OAuth2Client(env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
   const ticket = await client.verifyIdToken({
     idToken: credential,
-    audience: env.GOOGLE_CLIENT_ID,
+    audience: env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
   });
   const googleUser = ticket.getPayload();
 
