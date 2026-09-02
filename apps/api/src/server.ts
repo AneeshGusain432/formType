@@ -18,41 +18,14 @@ const openApiDocument = generateOpenApiDocument(serverRouter, {
   baseUrl: env.NEXT_PUBLIC_API_URL.concat("/api"),
 });
 
-const allowedOrigins = [
-  env.NEXT_PUBLIC_API_CLIENT_URL,
-  env.API_CLIENT_URL,
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-  "https://localhost:3000",
-  "https://127.0.0.1:3000",
-].filter((value): value is string => Boolean(value));
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-
-      const isLocalhostOrigin =
-        origin.startsWith("http://localhost:") ||
-        origin.startsWith("http://127.0.0.1:") ||
-        origin.startsWith("https://localhost:") ||
-        origin.startsWith("https://127.0.0.1:");
-
-      if (isLocalhostOrigin) {
-        callback(null, true);
-        return;
-      }
-
-      callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
-  }),
-);
+if (env.NODE_ENV === "prod") {
+  app.use(
+    cors({
+      origin: [env.NEXT_PUBLIC_API_CLIENT_URL || "http://localhost:3000"],
+      credentials: true
+    })
+  );
+}
 
 app.use(cookieParser())
 

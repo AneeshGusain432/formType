@@ -28,7 +28,7 @@ COPY --from=api-builder /workspace/apps/api/dist /workspace/apps/api/dist
 
 ENV PORT=8000 \
     NODE_ENV=prod \
-    NEXT_PUBLIC_API_URL=http://localhost:8000
+    BASE_URL=http://localhost:8000
 
 EXPOSE 8000
 CMD ["sh", "-lc", "cd /workspace/apps/api && node dist/index.js"]
