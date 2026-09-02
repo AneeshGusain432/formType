@@ -73,7 +73,7 @@ export const useGoogleSignin = () => {
 export const useGetUserInfo = () => {
   const { data, error, isError, isFetched, isFetching, isLoading } =
     trpc.auth.getLoggedInUserInfo.useQuery(undefined, {
-      retry: 2,
+      retry: false,
     });
 
   return {

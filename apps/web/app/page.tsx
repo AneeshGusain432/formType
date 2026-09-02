@@ -17,7 +17,10 @@ import {
 } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useGetUserInfo } from "~/hooks/api/auth/auth";
+import { Spinner } from "~/components/ui/spinner";
 
 const capabilities = [
   {
@@ -50,6 +53,15 @@ const fieldTypes = ["Short answer", "Email", "Yes / No"];
 
 export default function Home() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  const router = useRouter();
+  const { user, isLoading } = useGetUserInfo();
+
+  const handlePrimaryAction = () => {
+  if (isLoading) return;
+  router.push(user ? "/dashboard" : "/signup");
+};
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#101112] pt-20 text-[#f4f1ea]">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-[#2e302d]/80 bg-[#101112]/90 backdrop-blur-md">
@@ -164,9 +176,11 @@ export default function Home() {
                 size="lg"
                 className="h-12 rounded-full bg-[#e8914a] px-7 text-[#101112] hover:bg-[#f0a566]"
               >
-                <Link href="/signup">
+                <button
+                 onClick={handlePrimaryAction}
+                >
                   Start building free <ArrowRight />
-                </Link>
+                </button>
               </Button>
               <Button
                 asChild
@@ -316,9 +330,11 @@ export default function Home() {
           size="lg"
           className="mt-9 h-12 rounded-full bg-[#f4f1ea] px-7 text-[#101112] hover:bg-white"
         >
-          <Link href="/signup">
+          <button
+           onClick={handlePrimaryAction}
+          >
             Create a form for free <ArrowUpRight />
-          </Link>
+          </button>
         </Button>
       </section>
 
