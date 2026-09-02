@@ -137,7 +137,7 @@ export default function Home() {
               </Link>
               <button
                 onClick={() => {
-                  (setMobileNavOpen(false), handlePrimaryAction);
+                  (setMobileNavOpen(false), handlePrimaryAction());
                 }}
                 className="hover:text-[#f4f1ea]"
               >
