@@ -1,135 +1,192 @@
-# Turborepo starter
+# FormType
 
-This Turborepo starter is maintained by the Turborepo core team.
+FormType is a full-stack form builder and response collection platform built with a Turborepo monorepo architecture. It allows users to create forms, configure fields, share public links, and review submissions from a protected dashboard.
 
-## Using this example
+## Overview
 
-Run the following command:
+This project is structured around a modern SaaS-style workflow:
 
-```sh
-npx create-turbo@latest
+- Users sign up or log in with email/password or Google OAuth.
+- Authenticated users can create, edit, and delete forms from a dashboard.
+- Each form supports multiple field types, custom labels, placeholder text, and required validation.
+- Public forms can be filled out without authentication using a shareable link.
+- Submissions are stored securely and can be reviewed in the dashboard.
+- The app exposes a typed tRPC API across web and backend layers.
+
+## Core Features
+
+### Authentication and account management
+- Email/password sign up and sign in
+- Google sign-in flow
+- JWT-based access and refresh token handling
+- Protected dashboard routing
+- Logout and session cleanup
+
+### Form builder
+- Create a form with title and description
+- Add form fields with configurable options
+- Supported field types include:
+  - Text
+  - Number
+  - Email
+  - Yes / No
+  - Password
+- Edit existing forms and replace field definitions
+- Delete forms with associated submissions and field records
+
+### Public form experience
+- Public pages render a form for anonymous responders
+- Required fields are validated before submission
+- Submission success state and error messaging are shown in the UI
+- Response payload is accepted without needing signed-in access
+
+### Dashboard analytics and management
+- User-specific form listing
+- Submission metrics and dashboard cards
+- Overview of recent form activity and submission data
+- Form editing and management from the dashboard UI
+
+## Tech Stack
+
+### Frontend
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn-style UI primitives
+- Lucide and Tabler icon libraries
+
+### Backend and API
+- tRPC
+- Express-compatible server layer
+- JWT authentication handling
+- Google auth integration
+- Shared validation models and service layer
+
+### Data layer
+- PostgreSQL
+- Drizzle ORM
+- Database schema for users, forms, form fields, and submissions
+
+### Tooling and infrastructure
+- pnpm workspaces
+- Turbo monorepo orchestration
+- Docker Compose for API and web deployment
+- TypeScript project references across workspaces
+
+## Repository Architecture
+
+```text
+form-type/
+├── apps/
+│   ├── api/                 # API server and server-side runtime
+│   └── web/                # Next.js frontend application
+├── packages/
+│   ├── database/           # Drizzle schema and DB config
+│   ├── eslint-config/      # Shared lint config
+│   ├── logger/             # Logging utilities
+│   ├── services/           # Business logic for auth and forms
+│   ├── trpc/               # Shared tRPC server/client contracts
+│   └── typescript-config/  # Shared TS configuration
+├── docker-compose.yml
+├── Dockerfile
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+├── turbo.json
+└── README.md
 ```
 
-## What's inside?
+## App Responsibilities
 
-This Turborepo includes the following packages/apps:
+### apps/web
+The web app contains:
+- Landing page and marketing layout
+- Authentication pages for login and signup
+- Protected dashboard screens
+- Form creation and editing screens
+- Public form render pages
+- Shared UI components and API hooks
 
-### Apps and Packages
+### apps/api
+The API app hosts the backend server and exposes the tRPC endpoints used by the web client.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### packages/trpc
+This package contains:
+- router definitions
+- input and output validation schemas
+- auth middleware and protected procedures
+- shared path generation utilities
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### packages/services
+This package contains the business logic for:
+- user signup and signin
+- Google authentication
+- form creation, updates, deletion, and retrieval
+- submission processing and submission queries
+- dashboard statistics
 
-### Utilities
+### packages/database
+This package owns the database schema and Drizzle configuration, including models for:
+- users
+- forms
+- form fields
+- form submissions
+- answers linked to each submission
 
-This Turborepo has some additional tools already setup for you:
+## Environment and Setup
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Prerequisites
+- Node.js 18+
+- pnpm
+- PostgreSQL
+- Docker (optional, for local containerized development)
 
-### Build
+### Install dependencies
 
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```bash
+pnpm install
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Run the project
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+From the root:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```bash
+pnpm dev
 ```
 
-### Remote Caching
+This starts the workspace apps through Turbo.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### Database generation and migration
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+pnpm db:generate
+pnpm db:migrate
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Docker
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+The project includes a Docker Compose setup for API and web services:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```bash
+docker compose up --build
 ```
 
-## Useful Links
+## Key User Flow
 
-Learn more about the power of Turborepo:
+1. A user signs up or logs in.
+2. The dashboard loads their forms and metrics.
+3. The user creates a form by adding fields and metadata.
+4. The application stores the form and fields in the database.
+5. The user shares the public form URL.
+6. Responders complete the form and submit answers.
+7. Submissions are stored and available in the dashboard for review.
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+## Project Status
+
+This repository is currently organized as a production-style form platform with a working monorepo structure, typed API boundaries, protected user flows, and data persistence for form content and responses.
+
+## Notes
+
+The README was updated to match the actual architecture and feature implementation present in this workspace, rather than the default Turborepo template.
